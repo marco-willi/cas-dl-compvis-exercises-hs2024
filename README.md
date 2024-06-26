@@ -21,7 +21,6 @@ Click on the following badge to open the notebook in Google Colab:
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/marco-willi/cas-dl-compvis-exercises-hs2024/blob/main/assignments/00_env_check/env_check.ipynb)
 
 
-
 ### Exercise 01 - Machine Learning Recap
 
 Click on the following badge to open the notebook in Google Colab:
@@ -57,24 +56,61 @@ Click on the following badge to open the notebook in Google Colab:
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/marco-willi/cas-dl-compvis-exercises-hs2024/blob/main/assignments/05_classification/classification.ipynb)
 
 
-### Exercise 06 - Object Detection
-
-Click on the following badge to open the notebook in Google Colab:
-
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/marco-willi/cas-dl-compvis-exercises-hs2024/blob/main/assignments/06_object_detection/object_detection.ipynb)
-
-
-### Exercise 07 - Segmentation
-
-Click on the following badge to open the notebook in Google Colab:
-
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/marco-willi/cas-dl-compvis-exercises-hs2024/blob/main/assignments/07_segmentation/segmentation.ipynb)
-
-
-
 
 ## Local - pip (not tested)
 
 ```
 pip install -r requirements.txt
 ```
+
+
+## Local - Docker
+
+### 1. Install Docker on your computer
+
+Depending on your operating system you have to install docker in different ways.  
+
+You'll find detailed instructions here: https://docs.docker.com/get-docker
+
+
+### 2. Pull the Docker image
+
+```
+# pull the image
+docker pull mwilli13/cas-dl-compvis-exercises-hs2024:latest
+```
+
+### 3. Fork this repository
+
+Fork this repository by pressing the fork button on the upper right.
+
+### 4. Clone your fork to your computer. 
+
+Clone into your ml directory (`MY_ML_DIR`) using:
+
+```
+git clone MY_REPO_FORK_HTTPS_ADDRESS
+```
+
+### 5. Start a ml container on your machine
+
+```
+# Replace 'MY_ML_DIR' with your local code directory
+$ docker run -d \
+    -p 8877:8888 \
+    --user root \
+    -v MY_ML_DIR:/home/jovyan/work/ \
+    --name=cas_dl_computer_vision_part1 \
+    mwilli13/cas-dl-compvis-exercises-hs2024:latest start.sh jupyter lab --LabApp.token=''
+```
+
+### 6. Check that your container is running
+
+```
+docker ps -a
+```
+
+### 7. Connect to your container through your browser
+
+Enter `http://localhost:8877/lab` in your browser.
+

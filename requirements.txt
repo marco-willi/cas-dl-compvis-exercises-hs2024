@@ -13,6 +13,7 @@ timm
 # machine learning
 scikit-learn
 mlxtend
+kornia
 # images
 opencv-python-headless
 scikit-image
