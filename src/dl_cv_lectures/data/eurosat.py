@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from . import utils
+from .. import utils
 
 
 def download(download_dir: Path):

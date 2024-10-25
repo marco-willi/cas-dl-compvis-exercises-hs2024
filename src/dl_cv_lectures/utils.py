@@ -1,4 +1,4 @@
-"""Prepare Data."""
+"""Different Util Functions"""
 import os
 from pathlib import Path
 
@@ -23,6 +23,7 @@ def download_and_extract_zip(url: str, save_path: Path, extract_path: Path):
     os.makedirs(os.path.dirname(save_path), exist_ok=True)
 
     if not save_path.exists():
+        print(f"Starting download from {url}")
         # Download the file
         response = requests.get(url, stream=True)
         with open(save_path, "wb") as file:
@@ -30,13 +31,18 @@ def download_and_extract_zip(url: str, save_path: Path, extract_path: Path):
                 _ = file.write(chunk)
 
         print(f"File downloaded and saved to {save_path}")
+    else:
+        print(f"File {save_path} exists already - not overwriting")
 
     if not extract_path.exists():
+        print(f"Starting extracting {extract_path}")
         # Unzip the file
         with zipfile.ZipFile(save_path, "r") as zip_ref:
             zip_ref.extractall(extract_path)
 
         print(f"File extracted to {extract_path}")
+    else:
+        print(f"File {extract_path} exists already - not overwriting")
 
 
 def download_from_gdrive_and_extract_zip(file_id: str, save_path: Path, extract_path: Path):
@@ -59,6 +65,7 @@ def download_from_gdrive_and_extract_zip(file_id: str, save_path: Path, extract_
         print(f"File downloaded and saved to {save_path}")
 
     if not extract_path.exists():
+        print(f"Starting to extract... {extract_path}")
         # Unzip the file
         with zipfile.ZipFile(save_path, "r") as zip_ref:
             zip_ref.extractall(extract_path)
@@ -108,29 +115,25 @@ def find_all_imges_and_their_labels(image_dir: str) -> list[dict]:
 
 
 def create_train_test_split(
-    observations: list[dict],
+    ids: list[int],
+    labels: list[int | str],
     random_state: int = 123,
     test_size: float = 0.2,
     val_size: float = 0.1,
 ) -> tuple[list[dict], list[dict], list[dict]]:
-    all_ids = [i for i in range(0, len(observations))]
-    all_labels = [x["label"] for x in observations]
 
     train_ids, test_ids = train_test_split(
-        all_ids,
-        stratify=all_labels,
+        ids,
+        stratify=labels,
         test_size=test_size,
         random_state=random_state,
     )
 
     train_ids, val_ids = train_test_split(
         train_ids,
-        stratify=[all_labels[i] for i in train_ids],
+        stratify=[labels[i] for i in train_ids],
         test_size=val_size,
         random_state=random_state,
     )
-    train_observations = [observations[i] for i in train_ids]
-    val_observations = [observations[i] for i in val_ids]
-    test_observations = [observations[i] for i in test_ids]
 
-    return train_observations, val_observations, test_observations
+    return train_ids, val_ids, test_ids

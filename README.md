@@ -22,6 +22,14 @@ Click on the following badge to open the notebook in Google Colab:
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/marco-willi/cas-dl-compvis-exercises-hs2024/blob/main/notebooks/00_env_check/env_check.ipynb)
 
 
+### Exercise 01 - PyTorch and Image Data
+
+Click on the following badge to open the notebook in Google Colab:
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/marco-willi/cas-dl-compvis-exercises-hs2024/blob/main/notebooks/01_pytorch_and_images/pytorch_and_images.ipynb)
+
+
+
 ## Local
 
 ```

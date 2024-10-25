@@ -1,4 +1,4 @@
-"""The cats vs dogs dataset"""
+"""Generic Image Folder Dataset"""
 from pathlib import Path
 from typing import Callable
 
@@ -7,47 +7,29 @@ import numpy as np
 from PIL import Image
 from torch.utils.data import DataLoader, Dataset
 
-from . import utils
+from .. import utils
 
 
-def download(download_dir: Path):
-    # Download and extract the dataset to the default or specified directory
-    utils.download_and_extract_zip(
-        url="https://download.microsoft.com/download/3/E/1/3E1C3F21-ECDB-4869-8368-6DEBA77B919F/kagglecatsanddogs_5340.zip",
-        save_path=download_dir.joinpath("cats_vs_dogs.zip"),
-        extract_path=download_dir.joinpath("cats_vs_dogs/"),
-    )
-
-    # List of bad files to delete after extraction
-    bad_files = [
-        download_dir.joinpath("cats_vs_dogs") / "PetImages" / "Cat" / "666.jpg",
-        download_dir.joinpath("cats_vs_dogs") / "PetImages" / "Dog" / "11702.jpg",
-    ]
-
-    # Delete bad files if they exist
-    for bad_file in bad_files:
-        utils.delete_bad_file(bad_file)
-
-
-class CatsAndDogs(Dataset):
-    """The Cats and Dogs Dataset."""
+class ImageFolder(Dataset):
+    """Create Dataset from class specific folders."""
 
     def __init__(
         self,
-        observations: list[dict],
+        root_path: str | Path,
         transform: Callable | None = None,
-        classes: list[str] = None,
     ):
         """
         Args:
-            observations: list[dict], where each dict must have "image_path" and "label"
+            root_path: Path to directory that contains the class-specific folders
             transform: Optional transform to be applied on an image
             classes: List of class names.
         """
-        self.observations = observations
+        self.root_path = root_path
+        self.observations = utils.find_all_imges_and_their_labels(root_path)
         self.transform = transform
-        self.classes = (
-            classes if classes is not None else sorted({x["label"] for x in observations})
+        self.classes = sorted({x["label"] for x in self.observations})
+        print(
+            f"Found the following classes: {self.classes}, in total {len(self.observations)} images"
         )
 
     def __len__(self):
@@ -63,8 +45,40 @@ class CatsAndDogs(Dataset):
             image = self.transform(image)
         return {"image": image, "label": label_num}
 
+    @classmethod
+    def from_subset(
+        cls, original_dataset, subset_indices: list[int], transform: Callable | None = None
+    ):
+        """
+        Create a subset of the original dataset with only the specified indices.
 
-class CatsAndDogsRandom(CatsAndDogs):
+        Args:
+            original_dataset (ImageFolder): An instance of the ImageFolder dataset.
+            subset_indices (List[int]): List of indices to create a subset of observations.
+            transform: Override transform of current ds
+
+        Returns:
+            ImageFolder: A new instance of ImageFolder with the subset observations.
+        """
+        # Create a new instance with the same properties as the original
+        subset_instance = cls(
+            root_path=original_dataset.root_path,
+            transform=original_dataset.transform if transform is None else transform,
+        )
+
+        # Filter the observations based on the subset indices
+        subset_instance.observations = [original_dataset.observations[i] for i in subset_indices]
+        subset_instance.classes = original_dataset.classes  # Keep class list consistent
+
+        print(
+            f"Created a subset with {len(subset_instance.observations)} images "
+            f"from the original dataset of {len(original_dataset.observations)} images"
+        )
+
+        return subset_instance
+
+
+class ImageFolderRandom(ImageFolder):
     """Modify parent class to return random image."""
 
     def __getitem__(self, idx: int):
@@ -80,17 +94,17 @@ class CatsAndDogsRandom(CatsAndDogs):
         return {"image": random_image, "label": label_num}
 
 
-class CatsAndDogsData(L.LightningDataModule):
+class DataSetModule(L.LightningDataModule):
     """Create a data module to manage train, validation and test sets."""
 
     def __init__(
         self,
-        train_observations: list[dict],
-        val_observations: list[dict],
-        test_observations: list[dict],
+        ds_train: Dataset,
+        ds_val: Dataset,
+        ds_test: Dataset,
         classes: list[str],
-        train_transform: Callable,
-        test_transform: Callable,
+        train_transform: Callable | None,
+        test_transform: Callable | None,
         batch_size: int = 32,
         num_workers: int = 4,
     ):
@@ -99,27 +113,23 @@ class CatsAndDogsData(L.LightningDataModule):
         self.batch_size = batch_size
         self.num_workers = num_workers
 
-        self.train_observations = train_observations
-        self.val_observations = val_observations
-        self.test_observations = test_observations
-
+        self.ds_train = ds_train
+        self.ds_val = ds_val
+        self.ds_test = ds_test
         self.train_transform = train_transform
         self.test_transform = test_transform
 
     def setup(self, stage=None):
         """Split the dataset into train, validation, and test sets."""
         if stage == "fit" or stage is None:
-            self.ds_train = CatsAndDogs(
-                self.train_observations, transform=self.train_transform, classes=self.classes
-            )
-            self.ds_val = CatsAndDogs(
-                self.val_observations, transform=self.test_transform, classes=self.classes
-            )
+            if self.train_transform is not None:
+                self.ds_train.transform = self.train_transform
+            if self.test_transform is not None:
+                self.ds_val.transform = self.test_transform
 
         if stage == "test" or stage is None:
-            self.ds_test = CatsAndDogs(
-                self.test_observations, transform=self.test_transform, classes=self.classes
-            )
+            if self.test_transform is not None:
+                self.ds_test.transform = self.test_transform
 
     def train_dataloader(self):
         """Return the train data loader."""
