@@ -18,7 +18,7 @@ COPY pyproject.toml .
 COPY src ./src
 
 # Install the dependencies from pyproject.toml
-RUN pip install -e .[dev]
+RUN pip install -e .[dev,extra]
 
 # Expose any ports the app is expected to run on
 EXPOSE 8880 6006

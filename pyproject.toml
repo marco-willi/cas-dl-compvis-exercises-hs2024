@@ -7,11 +7,12 @@ where = ["src"]
 
 [project]
 name = "dl_cv_lectures"
-version = "0.1.0"
+version = "0.1.1"
 description = "Deep Learning for Computer Vision Lecture Tools"
 authors = [
     { name = "Marco Willi", email = "marco.willi@fhnw.ch" }
 ]
+requires-python = ">= 3.10"
 
 
 dependencies = [
@@ -24,8 +25,6 @@ dependencies = [
     # --------- data & image processing--------- #
     "Pillow",
     "opencv-python-headless",
-    "scikit-image",
-    "kornia",
     # --------- machine learning --------- #
     "mlxtend",
     "scikit-learn",
@@ -36,12 +35,8 @@ dependencies = [
     "torchshow",
     "torchviz",
     "torchinfo",
-    "captum",
     "lightning",
-    "timm",
-    "pyppeteer",
     "transformers",
-    "optuna",
     "ray[train, tune]",
     # --------- Experiment Tracking --------- #
     "tensorboard",
@@ -52,7 +47,6 @@ dependencies = [
     "ipywidgets",
     "xeus-python",
     "python-gitlab",
-    "jupyter-black",
     # --------- Utilities --------- #
     "tqdm",
     "python-dotenv",
@@ -63,6 +57,7 @@ dependencies = [
 [project.optional-dependencies]
 dev = [
     "black",
+    "jupyter-black",
     "argcomplete",
     "pytest",
     "mypy",
@@ -70,4 +65,14 @@ dev = [
     "rich",
     "ruff",
     "isort"
+]
+
+# extra dependencies which are not central
+extra = [
+    "scikit-image",
+    "optuna",
+    "kornia",
+    "captum",
+    "timm",
+    "pyppeteer",
 ]
