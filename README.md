@@ -29,6 +29,36 @@ Click on the following badge to open the notebook in Google Colab:
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/marco-willi/cas-dl-compvis-exercises-hs2024/blob/main/notebooks/01_pytorch_and_images/pytorch_and_images.ipynb)
 
 
+### Exercise 02 - MLPs and Images
+
+Click on the following badge to open the notebook in Google Colab:
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/marco-willi/cas-dl-compvis-exercises-hs2024/blob/main/notebooks/02_mlp_and_images/mlp_and_images.ipynb)
+
+
+
+### Exercise 03 - Convolutional Neural Networks
+
+Click on the following badge to open the notebook in Google Colab:
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/marco-willi/cas-dl-compvis-exercises-hs2024/blob/main/notebooks/03_cnns/cnns.ipynb)
+
+
+
+### Exercise 04 - Image Classification
+
+Click on the following badge to open the notebook in Google Colab:
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/marco-willi/cas-dl-compvis-exercises-hs2024/blob/main/notebooks/04_classification_practical/classification_practical.ipynb)
+
+
+
+### Exercise 05 - Foundation Models
+
+Click on the following badge to open the notebook in Google Colab:
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/marco-willi/cas-dl-compvis-exercises-hs2024/blob/main/notebooks/05_foundation_models/foundation_models.ipynb)
+
 
 ## Local
 
